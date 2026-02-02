@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>利用規約・プライバシーポリシー | MMObjectView</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.7; color: #333; max-width: 850px; margin: 0 auto; padding: 40px 20px; background-color: #f9f9f9; }
+        .container { background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 10px; font-size: 24px; }
+        h2 { margin-top: 30px; color: #1a73e8; font-size: 20px; border-left: 4px solid #1a73e8; padding-left: 15px; }
+        h3 { font-size: 17px; margin-top: 20px; color: #555; }
+        p, ul { margin-bottom: 15px; }
+        li { margin-bottom: 8px; }
+        .footer { margin-top: 50px; font-size: 0.9em; color: #888; text-align: center; border-top: 1px solid #eee; padding-top: 20px; }
+        .scope-list { background: #f1f3f4; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>MMObjectView 利用規約・プライバシーポリシー</h1>
+
+    <section>
+        <h2>利用規約</h2>
+        <p>本規約は、MMObjectView（以下、「本アプリ」）の利用条件を定めるものです。本アプリは、Google スプレッドシート上でSalesforceのオブジェクト情報を取得・表示するためのアドオン/スクリプトです。</p>
+        
+        <h3>1. 免責事項</h3>
+        <p>本アプリの利用により生じたデータの損失、業務の停止、またはその他の損害について、開発者は一切の責任を負いません。SalesforceのAPI制限やデータの整合性については、ユーザー自身の責任において管理するものとします。</p>
+
+        <h3>2. 禁止事項</h3>
+        <p>ユーザーは、本アプリをリバースエンジニアリングすること、またはGoogleおよびSalesforceの利用規約に反する態様で使用することを禁じます。</p>
+    </section>
+
+    <section>
+        <h2>プライバシーポリシー</h2>
+        <p>本アプリは、ユーザーのプライバシーを尊重し、最小限の権限で動作するように設計されています。</p>
+
+        <h3>1. アクセス権限（スコープ）の使用目的</h3>
+        <p>本アプリは動作のために以下の権限を使用しますが、これらはすべて<b>「Salesforceのオブジェクト情報をスプレッドシートに表示する」</b>という目的のためにのみ利用されます。</p>
+        <div class="scope-list">
+            <ul>
+                <li><strong>spreadsheets.currentonly</strong>: 現在開いているスプレッドシートにSalesforceのデータを書き込むために使用します。</li>
+                <li><strong>script.container.ui</strong>: スプレッドシート上に操作用のダイアログやメニューを表示するために使用します。</li>
+                <li><strong>script.external_request</strong>: Salesforce APIと通信し、オブジェクト情報を取得するために使用します。</li>
+            </ul>
+        </div>
+
+        <h3>2. データの取り扱いについて</h3>
+        <ul>
+            <li><strong>データ転送:</strong> Salesforceから取得したデータは、ユーザーのスプレッドシートに直接書き込まれます。</li>
+            <li><strong>保存の有無:</strong> 開発者が管理する外部サーバーへユーザーのデータやSalesforceの認証情報を送信・保存することはありません。</li>
+            <li><strong>第三者提供:</strong> 取得した情報を第三者に販売または提供することはありません。</li>
+        </ul>
+
+        <h3>3. お問い合わせ先</h3>
+        <p>本アプリに関するご質問や不具合の報告は、以下の連絡先までお願いいたします。</p>
+        <p>furugen098@gmail.com</p>
+    </section>
+
+    <div class="footer">
+        制定日：2026年2月2日<br>
+        &copy; 2026 Yu Furugen
+    </div>
+</div>
+
+</body>
+</html>
