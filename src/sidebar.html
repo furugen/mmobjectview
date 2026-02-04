@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- ============================================================ -->
+  <!-- CSS: Google Material Design ベース / レスポンシブ対応           -->
+  <!-- ============================================================ -->
+  <style>
+    /* ---- リセット & ベース ---- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Google Sans', 'Roboto', 'Noto Sans JP', Arial, sans-serif;
+      font-size: 13px;
+      color: #202124;
+      background: #fff;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* ---- セクション ---- */
+    .section {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: #5f6368;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    /* ---- ボタン ---- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      outline: none;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: #1a73e8;
+      color: #fff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #1765cc;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .btn-danger {
+      background: #fff;
+      color: #d93025;
+      border: 1px solid #dadce0;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #fce8e6;
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: #1a73e8;
+      border: 1px solid #dadce0;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #e8f0fe;
+    }
+
+    .btn-expand {
+      padding: 4px 12px;
+      font-size: 12px;
+      width: auto;
+      min-width: 56px;
+      border-radius: 16px;
+      background: #e8f0fe;
+      color: #1a73e8;
+      border: none;
+    }
+
+    .btn-expand:hover:not(:disabled) {
+      background: #d2e3fc;
+    }
+
+    /* ---- 接続状態バッジ ---- */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-connected {
+      background: #e6f4ea;
+      color: #1e8e3e;
+    }
+
+    .status-disconnected {
+      background: #fce8e6;
+      color: #d93025;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .status-dot.green { background: #1e8e3e; }
+    .status-dot.red { background: #d93025; }
+
+    /* ---- 環境切替 ---- */
+    .env-selector {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .env-btn {
+      flex: 1;
+      padding: 6px 8px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      background: #fff;
+      font-family: inherit;
+      font-size: 12px;
+      color: #5f6368;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .env-btn.active {
+      background: #e8f0fe;
+      color: #1a73e8;
+      border-color: #1a73e8;
+      font-weight: 500;
+    }
+
+    .env-btn:hover:not(.active) {
+      background: #f1f3f4;
+    }
+
+    /* ---- 検索・フィルタ ---- */
+    .search-box {
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 32px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 13px;
+      color: #202124;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9aa0a6;
+      font-size: 14px;
+    }
+
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border: 1px solid #dadce0;
+      border-radius: 16px;
+      font-size: 11px;
+      color: #5f6368;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: #fff;
+      user-select: none;
+    }
+
+    .filter-chip.active {
+      background: #e8f0fe;
+      color: #1a73e8;
+      border-color: #1a73e8;
+    }
+
+    .filter-chip:hover {
+      background: #f1f3f4;
+    }
+
+    .filter-chip.active:hover {
+      background: #d2e3fc;
+    }
+
+    .filter-chip input[type="checkbox"] {
+      display: none;
+    }
+
+    /* ---- オブジェクト一覧 ---- */
+    .object-list-container {
+      max-height: 360px;
+      overflow-y: auto;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+    }
+
+    .object-count {
+      font-size: 11px;
+      color: #9aa0a6;
+      margin-bottom: 4px;
+    }
+
+    .object-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-bottom: 1px solid #f1f3f4;
+      transition: background 0.1s;
+    }
+
+    .object-item:last-child {
+      border-bottom: none;
+    }
+
+    .object-item:hover {
+      background: #f8f9fa;
+    }
+
+    .object-info {
+      flex: 1;
+      min-width: 0;
+      margin-right: 8px;
+    }
+
+    .object-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #202124;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .object-name {
+      font-size: 11px;
+      color: #9aa0a6;
+      font-family: 'Roboto Mono', monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .object-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 500;
+      margin-left: 4px;
+    }
+
+    .badge-custom {
+      background: #fef7e0;
+      color: #b06000;
+    }
+
+    .badge-standard {
+      background: #e8eaed;
+      color: #5f6368;
+    }
+
+    /* ---- プログレス ---- */
+    .progress-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255,255,255,0.92);
+      z-index: 100;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .progress-overlay.visible {
+      display: flex;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #e0e0e0;
+      border-top-color: #1a73e8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .progress-message {
+      font-size: 13px;
+      color: #5f6368;
+      text-align: center;
+    }
+
+    /* ---- メッセージ（エラー / 成功） ---- */
+    .message-banner {
+      display: none;
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin: 8px 0;
+      line-height: 1.4;
+    }
+
+    .message-banner.visible {
+      display: block;
+    }
+
+    .message-error {
+      background: #fce8e6;
+      color: #c5221f;
+      border-left: 3px solid #d93025;
+    }
+
+    .message-success {
+      background: #e6f4ea;
+      color: #137333;
+      border-left: 3px solid #1e8e3e;
+    }
+
+    .message-info {
+      background: #e8f0fe;
+      color: #1967d2;
+      border-left: 3px solid #1a73e8;
+    }
+
+    .message-banner a {
+      color: inherit;
+      font-weight: 500;
+    }
+
+    .message-close {
+      float: right;
+      background: none;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      color: inherit;
+      opacity: 0.6;
+      line-height: 1;
+      padding: 0 0 0 8px;
+    }
+
+    .message-close:hover {
+      opacity: 1;
+    }
+
+    /* ---- フッター ---- */
+    .footer {
+      padding: 8px 16px;
+      text-align: center;
+      font-size: 10px;
+      color: #bdc1c6;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    /* ---- 非表示ヘルパー ---- */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================ -->
+  <!-- 認証セクション                                                -->
+  <!-- ============================================================ -->
+  <div class="section" id="authSection">
+    <div class="section-title">Salesforce 接続 <small style="color:#999;font-size:12px;">build:7</small></div>
+
+    <!-- 未認証時 -->
+    <div id="authDisconnected">
+      <div class="status-badge status-disconnected">
+        <span class="status-dot red"></span>
+        未接続
+      </div>
+      <div class="env-selector">
+        <button class="env-btn active" id="envProduction" onclick="selectEnvironment('production')">本番</button>
+        <button class="env-btn" id="envSandbox" onclick="selectEnvironment('sandbox')">Sandbox</button>
+      </div>
+      <div style="margin-top: 10px;">
+        <button class="btn btn-primary" id="btnConnect" onclick="connectSalesforce()">
+          Salesforce に接続
+        </button>
+      </div>
+    </div>
+
+    <!-- 認証済み -->
+    <div id="authConnected" class="hidden">
+      <div class="status-badge status-connected">
+        <span class="status-dot green"></span>
+        接続中
+      </div>
+      <div style="margin-top: 4px; font-size: 11px; color: #5f6368;" id="instanceUrlDisplay"></div>
+      <div style="margin-top: 8px;">
+        <button class="btn btn-danger" onclick="disconnectSalesforce()">切断</button>
+      </div>
+    </div>
+
+    <!-- メッセージ表示エリア -->
+    <div id="authMessage" class="message-banner"></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- フィルタ・検索セクション（認証後に表示）                        -->
+  <!-- ============================================================ -->
+  <div class="section hidden" id="filterSection">
+    <div class="section-title">オブジェクト検索</div>
+
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput"
+             placeholder="オブジェクト名またはラベルで検索..."
+             oninput="debounceFilter()">
+    </div>
+
+    <div class="filter-options">
+      <label class="filter-chip active" id="chipQueryable" onclick="toggleFilter(this, 'queryableOnly')">
+        <input type="checkbox" checked> クエリ可能
+      </label>
+      <label class="filter-chip" id="chipCustomOnly" onclick="toggleFilter(this, 'customOnly')">
+        <input type="checkbox"> カスタムのみ
+      </label>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- オブジェクト一覧セクション（認証後に表示）                      -->
+  <!-- ============================================================ -->
+  <div class="section hidden" id="objectListSection">
+    <div class="section-title">オブジェクト一覧</div>
+    <div class="object-count" id="objectCount"></div>
+    <div class="object-list-container" id="objectListContainer">
+      <!-- JS で動的に生成 -->
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 結果メッセージセクション                                       -->
+  <!-- ============================================================ -->
+  <div class="section hidden" id="resultSection">
+    <div id="resultMessage" class="message-banner"></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- プログレスオーバーレイ                                         -->
+  <!-- ============================================================ -->
+  <div class="progress-overlay" id="progressOverlay">
+    <div class="spinner"></div>
+    <div class="progress-message" id="progressMessage">処理中...</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- フッター                                                      -->
+  <!-- ============================================================ -->
+  <div class="footer">
+    Salesforce Object Explorer v1.0.0
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- JavaScript                                                    -->
+  <!-- ============================================================ -->
+  <script>
+    // ============================================================
+    // 状態管理
+    // ============================================================
+
+    /** 全オブジェクトデータ（サーバーから取得したオリジナル） */
+    var allObjects = [];
+
+    /** 現在のフィルタ設定 */
+    var currentFilters = {
+      keyword: '',
+      customOnly: false,
+      queryableOnly: true
+    };
+
+    /** デバウンスタイマー */
+    var filterTimer = null;
+
+    /** 処理中フラグ */
+    var isProcessing = false;
+
+    // ============================================================
+    // 初期化
+    // ============================================================
+
+    /**
+     * サイドバー読み込み完了時に認証状態をチェック
+     */
+    // === デバッグ用: 元のinitをコメントアウト ===
+    // 元のコードは後で戻すので削除しないでください
+    /*
+    (function init() {
+      console.log('[init] checkAuthStatus 呼び出し開始');
+      google.script.run
+        .withSuccessHandler(function(result) {
+          console.log('[init] checkAuthStatus 成功:', JSON.stringify(result));
+          onAuthStatusReceived(result);
+        })
+        .withFailureHandler(function(error) {
+          console.error('[init] checkAuthStatus 失敗:', error.message, error);
+          onRuntimeError(error);
+        })
+        .checkAuthStatus();
+    })();
+    */
+
+    // === デバッグ用: 最小テスト ===
+    (function init() {
+      console.log('[init] testPing 呼び出し開始');
+      google.script.run
+        .withSuccessHandler(function(result) {
+          console.log('[init] testPing 成功:', JSON.stringify(result));
+          showMessageHtml('authMessage',
+            '✅ サーバー通信成功！<br><small>' + escapeHtml(JSON.stringify(result)) + '</small>',
+            'success');
+        })
+        .withFailureHandler(function(error) {
+          console.error('[init] testPing 失敗:', error.message, error);
+          showMessageHtml('authMessage',
+            '❌ testPingも失敗<br><small>' + escapeHtml(error.message) + '</small><br><small>' + escapeHtml(JSON.stringify(error)) + '</small>',
+            'error');
+        })
+        .testPing();
+    })();
+
+    // ============================================================
+    // 認証関連
+    // ============================================================
+
+    /**
+     * 認証状態の確認結果を受け取る
+     */
+    function onAuthStatusReceived(result) {
+      if (!result.success) {
+        showMessage('authMessage', result.error.message, 'error');
+        return;
+      }
+
+      var data = result.data;
+
+      // 環境ボタンの状態を設定
+      setEnvironmentButtons(data.environment);
+
+      if (data.authenticated) {
+        showConnectedState(data.instanceUrl);
+        loadObjectList();
+      } else {
+        showDisconnectedState();
+      }
+    }
+
+    /**
+     * Salesforce に接続する（認証フローを開始）
+     */
+    function connectSalesforce() {
+      if (isProcessing) return;
+      setButtonLoading('btnConnect', true, '接続中...');
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          setButtonLoading('btnConnect', false, 'Salesforce に接続');
+          if (result.success) {
+            // 新しいウィンドウで認証URLを開く
+            var authWindow = window.open(result.data.authUrl, '_blank',
+              'width=600,height=700,menubar=no,toolbar=no,status=no');
+            // 認証完了を待つポーリング
+            pollAuthCompletion(authWindow);
+          } else {
+            showMessage('authMessage', result.error.message, 'error');
+          }
+        })
+        .withFailureHandler(function(error) {
+          setButtonLoading('btnConnect', false, 'Salesforce に接続');
+          showMessage('authMessage', '接続の開始に失敗しました: ' + error.message, 'error');
+        })
+        .getAuthorizationUrl();
+    }
+
+    /**
+     * 認証完了をポーリングで監視する
+     * 認証ウィンドウが閉じられたらサイドバーを更新
+     * 最大5分間（300秒）でタイムアウト
+     */
+    function pollAuthCompletion(authWindow) {
+      var pollCount = 0;
+      var maxPolls = 300; // 1秒×300回 = 5分
+      var pollInterval = setInterval(function() {
+        pollCount++;
+        try {
+          if (!authWindow || authWindow.closed) {
+            clearInterval(pollInterval);
+            // 認証状態を再チェック
+            google.script.run
+              .withSuccessHandler(onAuthStatusReceived)
+              .withFailureHandler(onRuntimeError)
+              .checkAuthStatus();
+          } else if (pollCount >= maxPolls) {
+            // タイムアウト: 5分以上経過
+            clearInterval(pollInterval);
+            try { authWindow.close(); } catch (closeErr) { /* ignore */ }
+            showMessage('authMessage', '認証がタイムアウトしました。もう一度お試しください。', 'error');
+          }
+        } catch (e) {
+          // cross-origin エラーは無視（ウィンドウがSalesforceのページにいる間）
+        }
+      }, 1000);
+    }
+
+    /**
+     * Salesforce との接続を切断する
+     */
+    function disconnectSalesforce() {
+      if (isProcessing) return;
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          if (result.success) {
+            showDisconnectedState();
+            hideMessage('authMessage');
+            allObjects = [];
+            showMessage('authMessage', '接続を解除しました。', 'info');
+          } else {
+            showMessage('authMessage', result.error.message, 'error');
+          }
+        })
+        .withFailureHandler(onRuntimeError)
+        .logout();
+    }
+
+    /**
+     * 環境を選択する（本番 / Sandbox）
+     */
+    function selectEnvironment(env) {
+      google.script.run
+        .withSuccessHandler(function(result) {
+          if (result.success) {
+            setEnvironmentButtons(env);
+            showDisconnectedState();
+            showMessage('authMessage', result.message, 'info');
+          } else {
+            showMessage('authMessage', result.error.message, 'error');
+          }
+        })
+        .withFailureHandler(onRuntimeError)
+        .switchEnvironment(env);
+    }
+
+    // ============================================================
+    // UI 状態管理
+    // ============================================================
+
+    /** 接続済み状態の表示 */
+    function showConnectedState(instanceUrl) {
+      document.getElementById('authDisconnected').classList.add('hidden');
+      document.getElementById('authConnected').classList.remove('hidden');
+      document.getElementById('filterSection').classList.remove('hidden');
+      document.getElementById('objectListSection').classList.remove('hidden');
+
+      if (instanceUrl) {
+        document.getElementById('instanceUrlDisplay').textContent = instanceUrl;
+      }
+    }
+
+    /** 未接続状態の表示 */
+    function showDisconnectedState() {
+      document.getElementById('authDisconnected').classList.remove('hidden');
+      document.getElementById('authConnected').classList.add('hidden');
+      document.getElementById('filterSection').classList.add('hidden');
+      document.getElementById('objectListSection').classList.add('hidden');
+      document.getElementById('resultSection').classList.add('hidden');
+
+      // オブジェクトリストをクリア
+      document.getElementById('objectListContainer').innerHTML = '';
+      document.getElementById('objectCount').textContent = '';
+    }
+
+    /** 環境ボタンの active 状態を設定 */
+    function setEnvironmentButtons(env) {
+      document.getElementById('envProduction').classList.toggle('active', env === 'production');
+      document.getElementById('envSandbox').classList.toggle('active', env === 'sandbox');
+    }
+
+    /** ボタンのローディング状態 */
+    function setButtonLoading(btnId, loading, text) {
+      var btn = document.getElementById(btnId);
+      if (!btn) return;
+      btn.disabled = loading;
+      btn.textContent = text || btn.textContent;
+    }
+
+    // ============================================================
+    // オブジェクト一覧
+    // ============================================================
+
+    /**
+     * オブジェクト一覧をサーバーから取得する
+     */
+    function loadObjectList() {
+      if (isProcessing) return;
+      showProgress('オブジェクト一覧を取得中...');
+
+      // Code.gs の fetchObjects() を呼び出す
+      // ※ SalesforceApi.gs の getObjectList() との関数名衝突を避けるため、
+      //    Code.gs では fetchObjects という名前のファサード関数を定義
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideProgress();
+          if (result.success) {
+            allObjects = result.data.objects || [];
+            applyFilters();
+          } else {
+            showMessage('authMessage', result.error.message, 'error');
+            // 認証切れの場合はログイン画面に戻す
+            if (result.error.code === 'AUTH_REQUIRED' || result.error.code === 'AUTH_EXPIRED') {
+              showDisconnectedState();
+            }
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideProgress();
+          showMessage('authMessage', 'オブジェクト一覧の取得に失敗しました: ' + error.message, 'error');
+        })
+        .fetchObjects(null);
+    }
+
+    /**
+     * フィルタをデバウンスして適用する（検索入力時）
+     */
+    function debounceFilter() {
+      clearTimeout(filterTimer);
+      filterTimer = setTimeout(function() {
+        currentFilters.keyword = document.getElementById('searchInput').value.trim();
+        applyFilters();
+      }, 250);
+    }
+
+    /**
+     * フィルタチップをトグルする
+     */
+    function toggleFilter(chip, filterKey) {
+      currentFilters[filterKey] = !currentFilters[filterKey];
+      chip.classList.toggle('active', currentFilters[filterKey]);
+      applyFilters();
+    }
+
+    /**
+     * フィルタを適用してオブジェクト一覧をレンダリングする
+     */
+    function applyFilters() {
+      var keyword = currentFilters.keyword.toLowerCase();
+      var filtered = allObjects.filter(function(obj) {
+        // テキスト検索
+        if (keyword) {
+          var nameMatch = (obj.name || '').toLowerCase().indexOf(keyword) >= 0;
+          var labelMatch = (obj.label || '').toLowerCase().indexOf(keyword) >= 0;
+          if (!nameMatch && !labelMatch) return false;
+        }
+        // カスタムのみ
+        if (currentFilters.customOnly && !obj.custom) return false;
+        // クエリ可能のみ
+        if (currentFilters.queryableOnly && !obj.queryable) return false;
+        return true;
+      });
+
+      renderObjectList(filtered);
+    }
+
+    /**
+     * オブジェクトリストをDOM にレンダリングする
+     */
+    function renderObjectList(objects) {
+      var container = document.getElementById('objectListContainer');
+      var countEl = document.getElementById('objectCount');
+
+      countEl.textContent = objects.length + ' 件' +
+        (allObjects.length !== objects.length ? '（全 ' + allObjects.length + ' 件中）' : '');
+
+      if (objects.length === 0) {
+        container.innerHTML = '<div style="padding:24px; text-align:center; color:#9aa0a6;">'
+          + '該当するオブジェクトがありません</div>';
+        return;
+      }
+
+      var html = '';
+      for (var i = 0; i < objects.length; i++) {
+        var obj = objects[i];
+        var badge = obj.custom
+          ? '<span class="object-badge badge-custom">カスタム</span>'
+          : '<span class="object-badge badge-standard">標準</span>';
+
+        html += '<div class="object-item">'
+          + '<div class="object-info">'
+          + '<div class="object-label">' + escapeHtml(obj.label) + badge + '</div>'
+          + '<div class="object-name">' + escapeHtml(obj.name) + '</div>'
+          + '</div>'
+          + '<button class="btn btn-expand" onclick="expandObject(\'' + escapeHtml(obj.name) + '\')" '
+          + 'id="btn-expand-' + escapeHtml(obj.name) + '">展開</button>'
+          + '</div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ============================================================
+    // オブジェクト展開
+    // ============================================================
+
+    /**
+     * 選択されたオブジェクトをスプレッドシートに展開する
+     */
+    function expandObject(objectApiName) {
+      if (isProcessing) return;
+
+      showProgress(objectApiName + ' を展開中...');
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideProgress();
+          if (result.success) {
+            // 各データ値を個別にエスケープしてからHTML組み立て（XSS対策）
+            var safeLabel = escapeHtml(result.data.objectLabel);
+            var safeName = escapeHtml(result.data.objectName);
+            var safeUrl = escapeHtml(result.data.spreadsheetUrl);
+            var safeCount = escapeHtml(String(result.data.fieldCount));
+            showResultHtml(
+              '✅ ' + safeLabel + ' (' + safeName + ') を展開しました！<br>'
+              + 'フィールド数: ' + safeCount + ' 件<br>'
+              + '<a href="' + safeUrl + '" target="_blank">スプレッドシートを開く ↗</a>',
+              'success'
+            );
+          } else {
+            showResult(result.error.message, 'error');
+            // 認証切れの場合
+            if (result.error.code === 'AUTH_REQUIRED' || result.error.code === 'AUTH_EXPIRED') {
+              showDisconnectedState();
+            }
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideProgress();
+          showResult('展開に失敗しました: ' + error.message, 'error');
+        })
+        .expandObjectToSheet(objectApiName);
+    }
+
+    // ============================================================
+    // メッセージ表示
+    // ============================================================
+
+    /**
+     * メッセージバナーを表示する
+     * @param {string} elementId - 表示先の要素ID
+     * @param {string} message - メッセージ（プレーンテキスト。HTMLタグは showMessageHtml を使用）
+     * @param {string} type - 'error' | 'success' | 'info'
+     */
+    function showMessage(elementId, message, type) {
+      var el = document.getElementById(elementId);
+      if (!el) return;
+      el.className = 'message-banner visible message-' + type;
+      el.innerHTML = '<button class="message-close" onclick="hideMessage(\'' + elementId + '\')">&times;</button>'
+        + escapeHtml(message);
+    }
+
+    /**
+     * HTMLを含むメッセージバナーを表示する（内部の信頼できるメッセージ専用）
+     * @param {string} elementId - 表示先の要素ID
+     * @param {string} htmlMessage - HTMLメッセージ（信頼できるソースのみ使用すること）
+     * @param {string} type - 'error' | 'success' | 'info'
+     */
+    function showMessageHtml(elementId, htmlMessage, type) {
+      var el = document.getElementById(elementId);
+      if (!el) return;
+      el.className = 'message-banner visible message-' + type;
+      el.innerHTML = '<button class="message-close" onclick="hideMessage(\'' + elementId + '\')">&times;</button>'
+        + htmlMessage;
+    }
+
+    /** メッセージバナーを非表示にする */
+    function hideMessage(elementId) {
+      var el = document.getElementById(elementId);
+      if (!el) return;
+      el.className = 'message-banner';
+      el.innerHTML = '';
+    }
+
+    /** 結果メッセージを表示する（プレーンテキスト、自動エスケープ） */
+    function showResult(message, type) {
+      document.getElementById('resultSection').classList.remove('hidden');
+      showMessage('resultMessage', message, type);
+    }
+
+    /** 結果メッセージをHTML付きで表示する（信頼できるソースのみ） */
+    function showResultHtml(htmlMessage, type) {
+      document.getElementById('resultSection').classList.remove('hidden');
+      showMessageHtml('resultMessage', htmlMessage, type);
+    }
+
+    // ============================================================
+    // プログレスオーバーレイ
+    // ============================================================
+
+    /** プログレス表示 */
+    function showProgress(message) {
+      isProcessing = true;
+      document.getElementById('progressMessage').textContent = message || '処理中...';
+      document.getElementById('progressOverlay').classList.add('visible');
+    }
+
+    /** プログレス非表示 */
+    function hideProgress() {
+      isProcessing = false;
+      document.getElementById('progressOverlay').classList.remove('visible');
+    }
+
+    // ============================================================
+    // ランタイムエラーハンドラ
+    // ============================================================
+
+    /**
+     * google.script.run の withFailureHandler 共通ハンドラ
+     */
+    function onRuntimeError(error) {
+      hideProgress();
+      var details = escapeHtml(error.message || '不明なエラー');
+      if (error.stack) {
+        details += '<br><small style="color:#888;font-size:11px;">' + escapeHtml(error.stack) + '</small>';
+      }
+      // errorオブジェクトの全プロパティも表示
+      try {
+        var errorKeys = Object.keys(error);
+        if (errorKeys.length > 0) {
+          details += '<br><small style="color:#888;font-size:11px;">Properties: ' + escapeHtml(JSON.stringify(error)) + '</small>';
+        }
+      } catch(e) {}
+      showMessageHtml('authMessage',
+        escapeHtml('通信エラーが発生しました。') + '<br>' + details,
+        'error');
+      // コンソールにも出力
+      console.error('onRuntimeError:', error);
+      console.error('Error message:', error.message);
+      console.error('Error name:', error.name);
+      console.error('Error stack:', error.stack);
+      console.error('Error JSON:', JSON.stringify(error));
+    }
+
+    // ============================================================
+    // ユーティリティ
+    // ============================================================
+
+    /** HTMLエスケープ */
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+  </script>
+</body>
+</html>
